@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using Prometheus;
 namespace app
 {
     public class Startup
@@ -25,16 +25,24 @@ namespace app
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+                services.AddMonitoring();
+		services.AddSingleton<MetricReporter>();
+		services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            //app.UseMetricServer("/metrics");
+
+	    if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMetricServer();
+            app.UseMonitoring();
+            app.UseMiddleware<ResponseTimeMiddleware>();
+
 
             app.UseHttpsRedirection();
 
@@ -45,7 +53,9 @@ namespace app
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapMetrics();
             });
+//            app.UseMvc();
         }
     }
 }

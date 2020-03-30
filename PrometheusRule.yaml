@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    labels:
+      monitoring-key: 'middleware'
+    name: aspnet3release-service
+    namespace: dotnetcore2
+spec:
+    groups:
+      - name: general.rules
+        rules:
+          - alert: APIHighMedianResponseTime
+            annotations:
+              summary: "High median response time on {{ $labels.service }} and {{ $labels.method }} {{ $labels.route }}"
+              description: "{{ $labels.service }}, {{ $labels.method }} {{ $labels.route }} has a median response time above 100ms (current value: {{ $value }}ms)"
+            expr: >
+              histogram_quantile(0.5, sum(rate(http_request_duration_ms_bucket[1m])) by (le, service, route, method))
+                > 100
+            for: 60s
+            labels:
+              severity: warning

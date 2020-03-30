@@ -1,19 +1,19 @@
-environment: development
+environment: qa
 
-apphost: k8s
+apphost: openshift4
 
 label:
-  name: aspnet3core
+  name: marcaspnet3core
 
 container:
-  name: aspnet3
-  pullPolicy: IfNotPresent
-  image: aspnet3k8s
-  tag: v1
-  port: 80
+  name: marcaspnet3
+  pullPolicy: Always
+  image: quay.io/marcf5/dotnetcore
+  tag: latest
+  port: 8080
 
 replicas: 3
 
 service:
-  port: 8888
+  port: 8080
   type: ClusterIP

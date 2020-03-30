@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+    labels:
+      monitoring-key: 'middleware'
+    name: aspnet3release-service 
+    namespace: dotnetcore2
+spec:
+    
+    endpoints:
+      - path: /metrics
+        port: api
+    selector:
+      matchLabels:
+        app: aspnet3release-service
+    namespaceSelector:
+    # matchNames:
+    # - default
+      any: true
+  
