@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  creationTimestamp: "2020-03-30T06:40:48Z"
+  generation: 1
+  labels:
+    monitoring-key: middleware
+  name: marcdotnetcore
+  namespace: openshift-monitoring
+  resourceVersion: "2418047"
+  selfLink: /apis/monitoring.coreos.com/v1/namespaces/openshift-monitoring/servicemonitors/marcdotnetcore
+  uid: f2f018da-b6dd-4268-b152-0ac47fe53930
+spec:
+  endpoints:
+  - path: /metrics
+    port: api
+  selector:
+    matchLabels:
+      app: marcdotnetcore
